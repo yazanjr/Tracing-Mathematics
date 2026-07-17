@@ -62,10 +62,6 @@
             totalPoints: 10
         }
 
-        
-
-
-
     Quastions:{
         key: value
         key -> 0 1 2 3 ...
@@ -119,17 +115,19 @@ Results: {
             }
         }
     }
+    1:{
+    }
 }
 
 */
 
 
-export function intiapp(){
+export function initApp(){
     localStorage.clear()
   if(!localStorage.getItem("Users")){
     const user = {
       Teacher : {},
-      Students : {}
+      Student : {}
     }
     localStorage.setItem("Users",JSON.stringify(user))
   }
@@ -149,7 +147,7 @@ export function intiapp(){
 
 
 
-function getNextKey(object) {
+export function getNextKey(object) {
     const keys = Object.keys(object).map(Number); 
 
     if (keys.length === 0) {
@@ -168,9 +166,9 @@ export function createTeacher(fullName, username, password){
 
 
   users.Teacher[newKey]={
-    "fullName" : fullName,
-    "username" : username,
-    "password" : password
+    fullName,
+    username,
+    password
   }
 
   localStorage.setItem("Users",JSON.stringify(users))
@@ -180,19 +178,22 @@ export function createTeacher(fullName, username, password){
 
 
 
-function getTeacher(teacherId){
+export function getTeacher(teacherId){
   const teacher = JSON.parse(localStorage.getItem("Users")).Teacher[teacherId]
   return teacher
 }
 
 
 
-function getTeacherByUsername(username){
+export function getTeacherByUsername(username){
   const teachers = JSON.parse(localStorage.getItem("Users")).Teacher
   let found
-  Object.values(teachers).forEach(teacher =>{
+  Object.entries(teachers).forEach(([id,teacher]) =>{
     if(teacher.username == username)
-      found = teacher;
+      found = {
+        id:Number(id),
+        teacher
+    }
   })
   return found
 }
@@ -202,21 +203,25 @@ function getTeacherByUsername(username){
 
 
 export function createStudent(fullName, nationalId, phone, username, password){
-  const data = JSON.parse(localStorage.getItem("Users")).Students
-  const newKey = getNextKey(data);
-  data[newKey] = {
-    "fullName" : fullName,
-    "nationalId" : nationalId,
-    "phone" : phone,
-    "username" : username,
-    "password" : password
+  const data = JSON.parse(localStorage.getItem("Users"))
+  const newKey = getNextKey(data.Student);
+  data.Student[newKey] = {
+    fullName,
+    nationalId,
+    phone,
+    username,
+    password,
+    results :[]
   }
+
+  localStorage.setItem("Users",JSON.stringify(data))
+  return newKey;
 }
 
 
 
 
-function getStudent(studentId) {
+export function getStudent(studentId) {
     const data = JSON.parse(localStorage.getItem("Users"));
     return data.Student[studentId];
 }
@@ -224,7 +229,7 @@ function getStudent(studentId) {
 
 
 
-function getAllStudents() {
+export function getAllStudents() {
     const data = JSON.parse(localStorage.getItem("Users"));
     return Object.values(data.Student); // object → array of student objects
 }
@@ -232,13 +237,21 @@ function getAllStudents() {
 
 
 export function getStudentByUsername(username) {
-    const students = getAllStudents();
-    return students.find(s => s.username === username);
+  const students = JSON.parse(localStorage.getItem("Users")).Student
+  let found
+  Object.entries(students).forEach(([id,student]) =>{
+    if(student.username == username)
+      found = {
+        id:Number(id),
+        student
+    }
+  })
+  return found
 }
 
 
 
-function addResultToStudent(studentId, resultId) {
+export function addResultToStudent(studentId, resultId) {
     const data = JSON.parse(localStorage.getItem("Users"));
     data.Student[studentId].results.push(resultId);
     localStorage.setItem("Users", JSON.stringify(data));
@@ -247,31 +260,44 @@ function addResultToStudent(studentId, resultId) {
 
 
 export function createExam(title, dateTime, status, questionIds) {
-    const data = JSON.parse(localStorage.getItem("Exams"));
+    const data = JSON.parse(localStorage.getItem("Exams")) || {};
     const newKey = getNextKey(data);
+
+    let totalPoints = 0;
+
+    questionIds.forEach(qid => {
+        const question = getQuestion(qid);
+
+        if (question) {
+            totalPoints += Number(question.points);
+        }
+    });
 
     data[newKey] = {
         title,
         dateTime,
         status,
-        questions: questionIds // array of question ids
+        questions: questionIds,
+        totalPoints
     };
 
     localStorage.setItem("Exams", JSON.stringify(data));
+
     return newKey;
 }
 
-function getExam(examId) {
+
+export function getExam(examId) {
     const data = JSON.parse(localStorage.getItem("Exams"));
     return data[examId];
 }
 
-function getAllExams() {
+export function getAllExams() {
     const data = JSON.parse(localStorage.getItem("Exams"));
     return Object.values(data);
 }
 
-function getActiveExams() {
+export function getActiveExams() {
     const exams = getAllExams();
     return exams.filter(exam => exam.status === "Active");
 }
@@ -280,7 +306,7 @@ function getActiveExams() {
 
 
 
-function createQuestion(text, options, correctAnsIndex, type, points) {
+export function createQuestion(text, options, correctAnsIndex, type, points) {
     const data = JSON.parse(localStorage.getItem("Questions"));
     const newKey = getNextKey(data);
 
@@ -300,14 +326,14 @@ function createQuestion(text, options, correctAnsIndex, type, points) {
 
 
 
-function getQuestion(questionId) {
+export function getQuestion(questionId) {
     const data = JSON.parse(localStorage.getItem("Questions"));
     return data[questionId];
 }
 
 
 
-function getQuestionsByIds(questionIdsArray) {
+export function getQuestionsByIds(questionIdsArray) {
     const data = JSON.parse(localStorage.getItem("Questions"));
     return questionIdsArray.map(id => data[id]); 
 }
@@ -341,7 +367,7 @@ Results: {
     }
 
 */
-function createResult(studentId, examId, ans, qId) {
+export function createResult(studentId, examId, ans, qId) {
     const data = JSON.parse(localStorage.getItem("Results"));
     const newKey = getNextKey(data);
     const exam = getExam(examId);
@@ -349,9 +375,11 @@ function createResult(studentId, examId, ans, qId) {
 
     let earnedPoints = 0
     const answers ={}
-    for(let i = 0; i < qId; i++){
-        const question = questionId(qId[i])
-        let isCor =question.correctAns == ans[i];
+    let percentage;
+    let passed;
+    for(let i = 0; i < qId.length; i++){
+        const question = getQuestion(qId[i])
+        const isCorrect = Number(question.correctAns) === (ans[i]);
         let points;
         if(isCorrect)
             {
@@ -363,12 +391,14 @@ function createResult(studentId, examId, ans, qId) {
  
         answers[i]={
             studentAns : ans[i],
-            isCorrect :`${isCor}`,
+            isCorrect,
             qustionID : qId[i],
-            pointsEarned : `${points}`
+            pointsEarned : points
         }
-        let percentage = earnedPoints/totalPoints *100
-        let passed = percentage > 49
+        const percentage =
+        totalPoints === 0 ? 0 : (earnedPoints / totalPoints) * 100;
+
+    const passed = percentage >= 50;
     }
 
 
@@ -393,7 +423,7 @@ function createResult(studentId, examId, ans, qId) {
 
 // create exam edit (totale points)
 
-function getResult(resultId) {
+export function getResult(resultId) {
     const data = JSON.parse(localStorage.getItem("Results"));
     return data[resultId];
 }
@@ -401,7 +431,59 @@ function getResult(resultId) {
 
 
 
-function getResultsByStudent(studentId) {
+export function getResultsByStudent(studentId) {
     const data = JSON.parse(localStorage.getItem("Results"));
     return Object.values(data).filter(r => r.studentId === studentId);
+}
+
+
+export function login(username, password) {
+    const teacher = getTeacherByUsername(username);
+    if (teacher && teacher.teacher.password === password) {
+        setSession(teacher.id,"teacher")
+        return { role: "teacher", user: teacher.teacher };
+    }
+
+    const student = getStudentByUsername(username);
+    if (student && student.student.password === password) {
+        setSession(student.id,"student")
+        return { role: "student", user: student.student };
+    }
+
+    return null; // no match — wrong username or password
+}
+
+export function setSession(userId, role) {
+    sessionStorage.setItem("Session", JSON.stringify({ userId, role }));
+}
+
+export function getCurrentSession() {
+    const raw = sessionStorage.getItem("Session");
+    return raw ? JSON.parse(raw) : null;
+}
+
+export function logout() {
+    sessionStorage.removeItem("Session");
+}
+
+
+export function addQuestionToExam(examId, questionId) {
+    const data = JSON.parse(localStorage.getItem("Exams"));
+    data[examId].questions.push(questionId);
+    localStorage.setItem("Exams", JSON.stringify(data));
+}
+
+
+
+export function getResultsByExam(examId) {
+    const data = JSON.parse(localStorage.getItem("Results"));
+    return Object.values(data).filter(r => r.examId === examId);
+}
+
+
+
+
+export function hasStudentTakenExam(studentId, examId) {
+    const results = getResultsByStudent(studentId);
+    return results.some(r => r.examId === examId); // true/false, not the result itself
 }
