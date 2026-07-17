@@ -4,8 +4,716 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style/style.css">
+    <style>
+  * { 
+    box-sizing: border-box;
+   }
+  html, body {
+     padding-top: var(--topbar-h);
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+ 
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; }
+ 
+  .wrap {
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+ 
+  /*  Navbar  */
+  .navbar {
+    
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--topbar-h);
+    display: flex;
+    align-items: center;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    z-index: 1000;
+    height: var(--topbar-h);   
+  }
+  .navbar .wrap {
+    display: flex;
+    align-items: center;
+    justify-content:space-between;
+    width: 100%;  
+    margin-left: 80px;
+    margin-right: 80px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--text);
+  }
+  .brand-mark {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--r-full);
+    background: var(--grad-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-glow);
+    flex-shrink: 0;
+  }
+  .brand-name { color: var(--primary); }
+ 
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 44px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .nav-links a {
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--text);
+    transition: color var(--fast) var(--ease);
+  }
+  .nav-links a:hover { color: var(--primary); }
+  .nav-links a.active { color: var(--text); }
+ 
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    border-radius: var(--r-md);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: transform var(--fast) var(--ease), box-shadow var(--fast) var(--ease), background var(--fast) var(--ease);
+    white-space: nowrap;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-ghost {
+    background: var(--card);
+    border-color: var(--border);
+    color: var(--text);
+    padding: 10px 20px;
+  }
+  .btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-primary {
+    background: var(--grad-primary);
+    color: #fff;
+    padding: 11px 22px;
+    box-shadow: var(--shadow-glow);
+  }
+  .btn-primary:hover { box-shadow: 0 10px 34px rgba(37,99,235,0.34); }
+ 
+  /*  Hero  */
+  .hero {
+    position: relative;
+    background: var(--bg);
+    background-image: var(--grad-mesh);
+    overflow: hidden;
+    padding: 70px 0 0;
+  }
+  .hero .wrap {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    align-items: center;
+    gap: 40px;
+  }
+  .hero-copy h1 {
+    font-family: var(--font-display);
+    font-size: 56px;
+    line-height: 1.1;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0 0 24px;
+    color: var(--text);
+  }
+  .hero-copy p {
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--text-muted);
+    max-width: 560px;
+    margin: 0 0 36px;
+  }
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 72px;
+  }
+  .btn-lg {
+    padding: 18px 28px;
+    font-size: 17px;
+    border-radius: var(--r-md);
+  }
+  .btn-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+  }
+ 
+  /*  Hero visual (calculator)  */
+  .hero-visual {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 460px;
+  }
+  .calculator-image img{
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(var(--shadow-lg));
+}
+  
+ 
+  /*  Stats bar  */
+  
+
+  .stats-bar{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+  }
+  
+  .stats-card {
+    background: var(--card);
+    width: 1000px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom:60px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: stretch;
+    padding: 30px 0;
+
+  }
+  .stat {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-right:90px ;
+    margin-left:50px ;
+    justify-content: center;
+    padding: 0 24px;
+  }
+  .stat + .stat {
+    border-left: 1px solid var(--border);
+  }
+  .stat-icon {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+  }
+  .stat-num {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 15px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+ 
+  .hero-spacer {
+    height: 130px;
+    background: var(--bg);
+  }
+ 
+  
+
+
+  /* About */
+  /* About hero  */
+  .about-hero {
+    background: var(--bg);
+    background-image: var(--grad-mesh);
+    padding: 88px 0 64px;
+    text-align: center;
+  }
+  .about-hero h1 {
+    font-family: var(--font-display);
+    font-size: 58px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin: 0 auto 32px;
+    max-width: 980px;
+    color: var(--text);
+  }
+  .about-hero p {
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--text-muted);
+    max-width: 680px;
+    margin: 0 auto;
+  }
+ 
+  /* Divider */
+  .divider-section {
+    background: var(--bg);
+    padding: 56px 0 0;
+  }
+  .divider {
+    height: 2px;
+    width: 100%;
+    max-width: 988px;
+    margin: 0 auto;
+    background: linear-gradient(90deg, var(--primary) 0%, rgba(37,99,235,0.15) 100%);
+    border-radius: var(--r-full);
+  }
+ 
+  /*  Mission / Vision cards  */
+  .mv-section {
+    background: var(--bg);
+    padding: 64px 0 120px;
+  }
+  .mv-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+  .mv-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-md);
+    padding: 40px;
+    text-align: center;
+  }
+  .mv-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: var(--r-md);
+    background: var(--accent-tint);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .mv-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+  .mv-head h3 {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+  }
+  .mv-card p {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--text-muted);
+    margin: 0;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+
+
+  /* ---------- Contact hero ---------- */
+  .contact-hero {
+    background: var(--bg);
+    background-image: var(--grad-mesh);
+    padding: 88px 0 64px;
+  }
+  .contact-hero h1 {
+    font-family: var(--font-display);
+    font-size: 46px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0;
+    color: var(--text);
+  }
+ 
+  /* ---------- Contact section ---------- */
+  .contact-section {
+    background: var(--bg);
+    padding: 0 0 120px;
+  }
+  .contact-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-xl);
+    box-shadow: var(--shadow-xl);
+    padding: 48px;
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 40px;
+    align-items: center;
+  }
+  .contact-card h2 {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--text);
+  }
+  .contact-card > .form-col > p.sub {
+    font-size: 15px;
+    color: var(--text-muted);
+    margin: 0 0 32px;
+  }
+ 
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 22px;
+  }
+  .form-group { display: flex; flex-direction: column; }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .form-group input,
+  .form-group select {
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--text);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: 13px 16px;
+    outline: none;
+    transition: border-color var(--fast) var(--ease), box-shadow var(--fast) var(--ease);
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  .form-group input::placeholder { color: var(--text-faint); }
+  .form-group input:focus,
+  .form-group select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-tint);
+  }
+  .select-wrap { position: relative; }
+  .select-wrap select { width: 100%; cursor: pointer; }
+  .select-wrap::after {
+    content: "";
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    width: 10px;
+    height: 10px;
+    border-right: 2px solid var(--text);
+    border-bottom: 2px solid var(--text);
+    transform: translateY(-70%) rotate(45deg);
+    pointer-events: none;
+  }
+ 
+  .message-row { margin-bottom: 28px; }
+ 
+  .send-btn {
+    width: 100%;
+    background: var(--grad-primary);
+    color: #fff;
+    border: none;
+    border-radius: var(--r-sm);
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: var(--font-body);
+    cursor: pointer;
+    box-shadow: var(--shadow-glow);
+    transition: transform var(--fast) var(--ease), box-shadow var(--fast) var(--ease);
+  }
+  .send-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 34px rgba(37,99,235,0.34);
+  }
+ 
+  /* ---------- Illustration ---------- */
+  .illus-col {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 380px;
+  }
+  .illus-col img {
+    width: 100%;
+    max-width: 340px;
+    height: auto;
+    object-fit: contain;
+  }
+ 
+
+
+  /* Media home */
+  @media (max-width: 980px) {
+    .wrap { padding: 0 20px; }
+    .nav-links { display: none; }
+    .hero .wrap { grid-template-columns: 1fr; text-align: left; }
+    .hero-copy h1 { font-size: 40px; }
+    .hero-visual { height: 320px; }
+    .calculator-image img { width: 700px; height: 260px; }
+    .stats-card { flex-direction: column; gap: 20px; padding: 24px; }
+    .stat { justify-content: flex-start; }
+    .stat + .stat { border-left: none; border-top: 1px solid var(--border); padding-top: 20px; }
+    .stats-bar { transform: translateY(30%); }
+    .hero-spacer { height: 220px; }
+  }
+  
+  /* Media about */
+  @media (max-width: 980px) {
+    .wrap { padding: 0 20px; }
+    .nav-links { display: none; }
+    .about-hero h1 { font-size: 38px; }
+    .mv-grid { grid-template-columns: 1fr; }
+  }
+
+   /* Media contact */
+   @media (max-width: 980px) {
+    .wrap { padding: 0 20px; }
+    .nav-links { display: none; }
+    .contact-hero h1 { font-size: 32px; }
+    .contact-card { grid-template-columns: 1fr; padding: 28px; }
+    .form-row { grid-template-columns: 1fr; gap: 0; }
+    .illus-col { order: -1; height: 260px; }
+  }
+
+
+
+
+
+
+
+
+</style>
+
+
 </head>
 <body>
+
+   
+
+
+ 
+<header class="navbar">
+  <div class="wrap">
+    <a class="brand" href="#">
+      <span class="brand-mark">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M4 5.5C4 4.67 4.67 4 5.5 4H11V19H5.5C4.67 19 4 19.67 4 20.5V5.5Z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>
+          <path d="M20 5.5C20 4.67 19.33 4 18.5 4H13V19H18.5C19.33 19 20 19.67 20 20.5V5.5Z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span>Examify</span>
+    </a>
+ 
+    <ul class="nav-links">
+      <li><a href="#" class="active">Home</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+ 
+    <div class="nav-actions">
+      <a href="#" class="btn btn-ghost">Log in</a>
+      <a href="#" class="btn btn-primary">Get Started</a>
+    </div>
+  </div>
+</header>
+ 
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-copy">
+      <h1>Track mathematics mastery, one solved equation at a time.</h1>
+      <p>MathTrack gives teachers a precise way to create exams and gives students a clear view of their progress with real-time analytics, elegant reporting, and zero busywork.</p>
+      <div class="hero-actions">
+        <a href="#" class="btn btn-primary btn-lg">
+          <span class="btn-arrow">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          Start Free Trial
+        </a>
+        <a href="#" class="btn btn-ghost btn-lg">Watch how to work</a>
+      </div>
+    </div>
+ 
+    <div class="hero-visual">
+      <div class="calculator-image">
+    <img src="pic\magnific__assistant__87034.png" alt="Calculator" class="img-fluid">
+     </div>
+  </div>
+  </div>
+ 
+  <div class= "stats-bar">
+    <div class="stats-card">
+      <div class="stat">
+        <span class="stat-icon">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="var(--accent)" stroke-width="1.8"/><circle cx="12" cy="12" r="3.2" stroke="var(--accent)" stroke-width="1.8"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </span>
+        <div>
+          <div class="stat-num">98.6%</div>
+          <div class="stat-label">Accuracy rate</div>
+        </div>
+      </div>
+      <div class="stat">
+        <span class="stat-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M6 3h9l4 4v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" fill="var(--accent)"/><path d="M15 3v4h4" fill="#FFF7EA"/><text x="9" y="16.5" font-size="7" font-weight="700" fill="#fff" font-family="Arial">A+</text></svg>
+        </span>
+        <div>
+          <div class="stat-num">12,400+</div>
+          <div class="stat-label">Exams graded</div>
+        </div>
+      </div>
+      <div class="stat">
+        <span class="stat-icon">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="3" stroke="var(--accent)" stroke-width="1.8"/><path d="M12 8v6M9 11l3 3 3-3" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <div>
+          <div class="stat-num">340+</div>
+          <div class="stat-label">Institutions</div>
+        </div>
+      </div>
+    </div>
+  
+ 
+</section>
+
+
+<!-- About -->
+ <section class="about-hero">
+  <div class="wrap">
+    <h1>Built by educators who were tired of spreadsheets.</h1>
+    <p>MathTrack began in a single university's applied mathematics department, where grading exams and tracking progress meant juggling five different tools. We built the platform we wished existed.</p>
+  </div>
+</section>
+ 
+<section class="divider-section">
+  <div class="wrap">
+    <div class="divider"></div>
+  </div>
+</section>
+ 
+<section class="mv-section">
+  <div class="wrap">
+    <div class="mv-grid">
+      <div class="mv-card">
+        <div class="mv-head">
+          <span class="mv-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="var(--accent)" stroke-width="1.8"/><circle cx="12" cy="12" r="3.2" stroke="var(--accent)" stroke-width="1.8"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </span>
+          <h3>Our Mission</h3>
+        </div>
+        <p>Give every mathematics educator the tools to design rigorous exams and give every student a transparent view of their own growth.</p>
+      </div>
+ 
+      <div class="mv-card">
+        <div class="mv-head">
+          <span class="mv-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M11 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 2.5a1.9 1.9 0 0 1 2.7 2.7L12 14.4l-3.6.9.9-3.6 9.2-9.2z" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <h3>Our Vision</h3>
+        </div>
+        <p>A world where assessment data helps students learn faster, rather than simply ranking them.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section class="contact-hero">
+  <div class="wrap">
+    <h1>We are happy to receive your messages</h1>
+  </div>
+</section>
+ 
+<section class="contact-section">
+  <div class="wrap">
+    <div class="contact-card">
+ 
+      <div class="form-col">
+        <h2>Send us a message</h2>
+        <p class="sub">Fill out the form and our team will get back to you shortly.</p>
+ 
+        <form onsubmit="return false;">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fullname">Full Name</label>
+              <input id="fullname" type="text" placeholder="Full Name">
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input id="email" type="email" placeholder="example.@gmail.com">
+            </div>
+          </div>
+ 
+          <div class="form-row">
+            <div class="form-group">
+              <label for="institution">Institution</label>
+              <input id="institution" type="text" placeholder="University Name">
+            </div>
+            <div class="form-group">
+              <label for="role">Role</label>
+              <div class="select-wrap">
+                <select id="role">
+                  <option>Teacher</option>
+                  <option>Administrator</option>
+                  <option>Student</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+          </div>
+ 
+          <div class="form-row message-row">
+            <div class="form-group full">
+              <label for="message">Message</label>
+              <input id="message" type="text" placeholder="Tell us more about your department need...">
+            </div>
+          </div>
+ 
+          <button type="submit" class="send-btn">Send message</button>
+        </form>
+      </div>
+ 
+      <div class="illus-col">
+        <img src="pic\Rectangle 2.png" alt="Contact us illustration">
+      </div>
+ 
+    </div>
+  </div>
+</section>
+
+
     
 </body>
 </html>
